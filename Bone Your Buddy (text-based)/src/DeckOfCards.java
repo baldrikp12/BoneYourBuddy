@@ -56,7 +56,7 @@ public class DeckOfCards {
 	/** comment */
 	public void shuffleDeck() {
 
-		Collections.shuffle(MY_DECK, new Random());
+		Collections.shuffle(MY_DECK);
 	}
 
 	/** comment */
