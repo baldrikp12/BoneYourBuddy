@@ -1,3 +1,4 @@
+
 import java.util.Scanner;
 
 public class HumanPlayer extends Player {
@@ -13,25 +14,29 @@ public class HumanPlayer extends Player {
 
 	public void yourTurn() throws InterruptedException {
 
-		TextDisplay.showText(">> It's your turn");
-
-		Scanner in = new Scanner(System.in);
-
 		String theChoice = "";
-		do {
-			TextDisplay.showText(">> Trade card or keep (t/k)? ");
-			theChoice = in.next();
 
-			if (!("t").equalsIgnoreCase(theChoice)
-			        && !("k").equalsIgnoreCase(theChoice)) {
-				continue;
-			}
-			break;
+		if (getCard().contains("King")) {
+			theChoice = "k";
+		} else {
+			TextDisplay.showText(">> It's your turn");
 
-		} while (true);
+			Scanner in = new Scanner(System.in);
 
-		System.out.println();
+			do {
+				TextDisplay.showText(">> Trade card or keep (t/k)? ");
+				theChoice = in.next();
 
+				if (!("t").equalsIgnoreCase(theChoice)
+				        && !("k").equalsIgnoreCase(theChoice)) {
+					continue;
+				}
+				break;
+
+			} while (true);
+
+			System.out.println();
+		}
 		setChanged();
 		notifyObservers(theChoice.toLowerCase());
 
