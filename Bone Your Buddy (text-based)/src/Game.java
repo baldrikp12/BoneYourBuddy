@@ -41,42 +41,38 @@ public class Game implements Observer {
 		System.out.println();
 		TextDisplay.showText(">> Starting round " + theRound);
 
-		System.out.println();
-		TextDisplay.showText(">> Dealing cards ");
-		System.out.println();
-
-		if (deck.size() - num_Of_Players > 0) {
-			for (Player p : playersList_In) {
-				p.takeCard(deck.dealCard());
-				p.rememberCard();
-				if (p.isHuman()) {
-					p.testPrint();
-				}
-			}
-		} else {
+		if (deck.size() - num_Of_Players < 1) {
+			
+			TextDisplay.showText(">> Building new deck.");
 			deck.clearDeck();
 			discardDeck.clearDeck();
 			deck.buildNewDeck();
 			deck.shuffleDeck();
-			for (Player p : playersList_In) {
-				p.takeCard(deck.dealCard());
-				p.rememberCard();
-				if (p.isHuman()) {
-					p.testPrint();
-				}
+
+		}
+		
+		System.out.println();
+		TextDisplay.showText(">> Dealing cards ");
+		System.out.println();
+		
+		for (Player p : playersList_In) {
+			p.takeCard(deck.dealCard());
+			p.rememberCard();
+			if (p.isHuman()) {
+				p.testPrint();
 			}
 		}
 
 		/* Test Only */
-		System.out.print(">>Test<< (Cards Dealt) [");
-		for (int i = 0; i < playersList_In.size(); i++) {
-			if (i > 0) {
-				System.out.print(", ");
-			}
-			System.out.print(playersList_In.get(i).getCard());
-		}
-		System.out.println("]\n");
-		System.out.print("");
+//		System.out.print(">>Test<< (Cards Dealt) [");
+//		for (int i = 0; i < playersList_In.size(); i++) {
+//			if (i > 0) {
+//				System.out.print(", ");
+//			}
+//			System.out.print(playersList_In.get(i).getCard());
+//		}
+//		System.out.println("]\n");
+//		System.out.print("");
 		/* Test Only */
 
 		for (Player p : playersList_In) {
