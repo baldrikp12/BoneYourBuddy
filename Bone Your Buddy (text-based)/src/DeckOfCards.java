@@ -50,7 +50,7 @@ public class DeckOfCards {
 	}
 
 	public void clearDeck() {
-
+		numCardsLeft = 0;
 		MY_DECK.clear();
 	}
 
