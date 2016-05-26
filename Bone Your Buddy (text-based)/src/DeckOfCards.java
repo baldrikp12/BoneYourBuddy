@@ -6,13 +6,7 @@ import java.util.Random;
 public class DeckOfCards {
 
 	/** comment */
-	private static final int NUMBER_OF_CARDS = 52;
-
-	/** comment */
 	private transient final List<Card> MY_DECK = new ArrayList<Card>();
-
-	/** comment */
-	private int numCardsLeft = 0;
 
 	/** comment */
 	public DeckOfCards() {
@@ -25,7 +19,6 @@ public class DeckOfCards {
 		for (int rank = 1; rank < 14; rank++) { // Ranks
 			for (int suit = 0; suit < 4; suit++) { // Suits
 				MY_DECK.add(new Card(rank, suit));
-				numCardsLeft++;
 			}
 		}
 
@@ -34,8 +27,7 @@ public class DeckOfCards {
 	/** comment */
 	public Card dealCard() {
 
-		final Card card = MY_DECK.remove(numCardsLeft - 1);
-		numCardsLeft--;
+		final Card card = MY_DECK.remove(size() - 1);
 
 		return card;
 
@@ -45,12 +37,11 @@ public class DeckOfCards {
 	public void addCard(final Card theCard) {
 
 		MY_DECK.add(theCard);
-		numCardsLeft++;
 
 	}
 
 	public void clearDeck() {
-		numCardsLeft = 0;
+
 		MY_DECK.clear();
 	}
 
@@ -65,13 +56,13 @@ public class DeckOfCards {
 	/** comment */
 	public void shuffleDeck() {
 
-		Collections.shuffle(MY_DECK);
+		Collections.shuffle(MY_DECK, new Random());
 	}
 
 	/** comment */
 	public int size() {
 
-		return numCardsLeft;
+		return MY_DECK.size();
 	}
 
 }
