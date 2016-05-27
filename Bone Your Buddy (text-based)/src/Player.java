@@ -7,9 +7,11 @@ public abstract class Player extends Observable {
 
 	private Card myOldCard;
 
-	private int num_Of_Quarter = 1;
+	private int num_Of_Quarter = 4;
 
 	private String myPlayerName;
+
+	private boolean isLoser = false;
 
 	public Player(String thePlayerName) {
 		setMyPlayerNumber(thePlayerName);
@@ -65,6 +67,16 @@ public abstract class Player extends Observable {
 
 		return "Player " + getMyPlayerName();
 
+	}
+
+	public void setLoserStatus() {
+
+		isLoser = !isLoser;
+	}
+
+	public boolean getLoserStatus() {
+
+		return isLoser;
 	}
 
 	public abstract boolean isHuman();
