@@ -84,7 +84,6 @@ public class Game implements Observer {
 
 		calculateLosers();
 		displayResults();
-
 		updatePlayers();
 
 		currentPlayer = 0;
@@ -92,7 +91,6 @@ public class Game implements Observer {
 
 	private void displayResults() {
 
-		int i = 0;
 		for (Player p : playersList_In) {
 
 			if (p.getLoserStatus() == true) {
@@ -185,15 +183,16 @@ public class Game implements Observer {
 		deck.shuffleDeck();
 		int round = 1;
 		while (playersList_In.size() > 1) {
+
 			try {
-				startRound(round);
+				startRound(round++);
 				losersList.clear();
-				round++;
 				moveDealer();
 
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			pauseProg();
 		}
 
 		in.nextLine();
@@ -213,7 +212,6 @@ public class Game implements Observer {
 			playersList_In.clear();
 			playersList_Out.clear();
 			losersList.clear();
-			round++;
 			in.reset();
 		}
 
@@ -309,6 +307,13 @@ public class Game implements Observer {
 			e.printStackTrace();
 		}
 
+	}
+
+	public static void pauseProg() {
+
+		System.out.println("Press enter to continue...");
+		Scanner keyboard = new Scanner(System.in);
+		keyboard.nextLine();
 	}
 
 }
