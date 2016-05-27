@@ -13,4 +13,25 @@ public class TextDisplay {
 		System.out.println(" ");
 	}
 
+	public static void thinkingText() throws InterruptedException {
+
+		int i = 0;
+		while (i < 5) {
+			try {
+				System.out.print(".");
+				Thread.currentThread().sleep(100);
+				System.out.print("\r .");
+				Thread.currentThread().sleep(100);
+				System.out.print("\r  .");
+				Thread.currentThread().sleep(100);
+				System.out.print("\r   .");
+				Thread.currentThread().sleep(100);
+				System.out.print("\r    .");
+				System.out.print("\r");
+			} catch (Exception ex) {
+			}
+			i++;
+		}
+	}
+
 }
