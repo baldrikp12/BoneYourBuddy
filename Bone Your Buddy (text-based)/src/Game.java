@@ -42,7 +42,7 @@ public class Game implements Observer {
 		TextDisplay.showText(">> Starting round " + theRound);
 
 		if (deck.size() - num_Of_Players < 1) {
-			
+
 			TextDisplay.showText(">> Building new deck.");
 			deck.clearDeck();
 			discardDeck.clearDeck();
@@ -50,11 +50,11 @@ public class Game implements Observer {
 			deck.shuffleDeck();
 
 		}
-		
+
 		System.out.println();
 		TextDisplay.showText(">> Dealing cards ");
 		System.out.println();
-		
+
 		for (Player p : playersList_In) {
 			p.takeCard(deck.dealCard());
 			p.rememberCard();
@@ -64,15 +64,15 @@ public class Game implements Observer {
 		}
 
 		/* Test Only */
-//		System.out.print(">>Test<< (Cards Dealt) [");
-//		for (int i = 0; i < playersList_In.size(); i++) {
-//			if (i > 0) {
-//				System.out.print(", ");
-//			}
-//			System.out.print(playersList_In.get(i).getCard());
-//		}
-//		System.out.println("]\n");
-//		System.out.print("");
+		// System.out.print(">>Test<< (Cards Dealt) [");
+		// for (int i = 0; i < playersList_In.size(); i++) {
+		// if (i > 0) {
+		// System.out.print(", ");
+		// }
+		// System.out.print(playersList_In.get(i).getCard());
+		// }
+		// System.out.println("]\n");
+		// System.out.print("");
 		/* Test Only */
 
 		for (Player p : playersList_In) {
@@ -82,25 +82,31 @@ public class Game implements Observer {
 
 		TextDisplay.showText(">> Everyone show your cards <<\n");
 
+		calculateLosers();
 		displayResults();
 
-		updatePlayers(calculateLosers());
+		updatePlayers();
 
 		currentPlayer = 0;
 	}
 
 	private void displayResults() {
 
+		int i = 0;
 		for (Player p : playersList_In) {
 
-			System.out.println(p.getName() + "(" + p.getNumOfQuarters() + ")    "
-			        + p.getCard());
-
+			if (p.getLoserStatus() == true) {
+				System.out.println(p.getName() + "(" + p.getNumOfQuarters()
+				        + ")    " + p.getCard() + " (Loser)");
+			} else {
+				System.out.println(p.getName() + "(" + p.getNumOfQuarters()
+				        + ")    " + p.getCard());
+			}
 		}
 
 	}
 
-	private List<Player> calculateLosers() {
+	private void calculateLosers() {
 
 		ArrayList<Integer> cardRanks = new ArrayList<Integer>();
 
@@ -113,24 +119,24 @@ public class Game implements Observer {
 		for (int index = 0; index < cardRanks.size(); index++) {
 			if (min == playersList_In.get(index).giveCard().getRank()) {
 				losersList.add(playersList_In.get(index));
+				playersList_In.get(index).setLoserStatus();
 			}
 		}
-		return losersList;
 
 	}
 
-	private void updatePlayers(List<Player> list) throws InterruptedException {
+	private void updatePlayers() throws InterruptedException {
 
 		System.out.println();
 
-		if ((playersList_In.size() == 2) & (list.size() == 2)) {
+		if ((playersList_In.size() == 2) & (losersList.size() == 2)) {
 			TextDisplay.showText(">> Equal cards! Next round.");
 
 		} else {
 
-			Collections.reverse(list);
+			Collections.reverse(losersList);
 
-			for (Player p : list) {
+			for (Player p : losersList) {
 				p.loseQuarter();
 				TextDisplay.showText(p.getName() + " Loses a quarter!");
 
@@ -141,6 +147,7 @@ public class Game implements Observer {
 					playersList_In.remove(p);
 
 				}
+				p.setLoserStatus();
 			}
 		}
 
