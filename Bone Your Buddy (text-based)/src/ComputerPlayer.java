@@ -21,6 +21,7 @@ public class ComputerPlayer extends Player {
 		} else if (giveCard().getRank() < 5) {
 			theChoice = "t";
 		} else {
+			TextDisplay.thinkingText();
 			Random ran = new Random();
 			int x = ran.nextInt(2) + 1;
 
