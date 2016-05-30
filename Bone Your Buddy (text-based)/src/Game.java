@@ -23,7 +23,11 @@ public class Game implements Observer {
 
 	private DeckOfCards discardDeck = new DeckOfCards();
 
-	private int currentPlayer = 0;
+	private int playersIndex = 0;
+
+	private Player currentPlayer;
+
+	private Player nextPlayer;
 
 	public Game() throws InterruptedException {
 
@@ -35,8 +39,7 @@ public class Game implements Observer {
 		playersList_In.removeFirst();
 	}
 
-	private void startRound(int theRound)
-	        throws InterruptedException, IOException {
+	private void startRound(int theRound) throws InterruptedException, IOException {
 
 		System.out.println();
 		TextDisplay.showText(">> Starting round " + theRound);
@@ -76,8 +79,11 @@ public class Game implements Observer {
 		/* Test Only */
 
 		for (Player p : playersList_In) {
+			currentPlayer = playersList_In.get(playersIndex);
+			nextPlayer = (playersList_In.size() - playersIndex > 1) ? playersList_In.get(playersIndex + 1) : null;
 			p.yourTurn();
-			currentPlayer++;
+
+			playersIndex++;
 		}
 
 		TextDisplay.showText(">> Everyone show your cards <<\n");
@@ -86,7 +92,7 @@ public class Game implements Observer {
 		displayResults();
 		updatePlayers();
 
-		currentPlayer = 0;
+		playersIndex = 0;
 	}
 
 	private void displayResults() {
@@ -94,11 +100,9 @@ public class Game implements Observer {
 		for (Player p : playersList_In) {
 
 			if (p.getLoserStatus() == true) {
-				System.out.println(p.getName() + "(" + p.getNumOfQuarters()
-				        + ")    " + p.getCard() + " (Loser)");
+				System.out.println(p.getName() + "(" + p.getNumOfQuarters() + ")    " + p.getCard() + " (Loser)");
 			} else {
-				System.out.println(p.getName() + "(" + p.getNumOfQuarters()
-				        + ")    " + p.getCard());
+				System.out.println(p.getName() + "(" + p.getNumOfQuarters() + ")    " + p.getCard());
 			}
 		}
 
@@ -129,6 +133,9 @@ public class Game implements Observer {
 
 		if ((playersList_In.size() == 2) & (losersList.size() == 2)) {
 			TextDisplay.showText(">> Equal cards! Next round.");
+			for (Player p : losersList) {
+				p.setLoserStatus();
+			}
 
 		} else {
 
@@ -247,52 +254,39 @@ public class Game implements Observer {
 
 	private void makeTrade() throws InterruptedException {
 
-		if (currentPlayer < playersList_In.size() - 1) {
+		if (playersIndex < playersList_In.size() - 1) {
 
-			TextDisplay
-			        .showText(">> " + playersList_In.get(currentPlayer).getName()
-			                + " is trading cards with " + playersList_In
-			                        .get(currentPlayer + 1).getName());
+			TextDisplay.showText(">> " + currentPlayer.getName() + " is trading cards with " + nextPlayer.getName());
 
-			if (playersList_In.get(currentPlayer + 1).getCard().contains("King")) {
-				TextDisplay.showText(
-				        ">> " + playersList_In.get(currentPlayer + 1).getName()
-				                + " shows a King to stop the trade!");
+			if (nextPlayer.getCard().contains("King")) {
+				TextDisplay.showText(">> " + nextPlayer.getName() + " shows a King to stop the trade!");
 				keepCard();
 
 			} else {
-				Card tempCardNew = playersList_In.get(currentPlayer + 1)
-				        .giveCard();
-				Card tempCardOld = playersList_In.get(currentPlayer).giveCard();
-				playersList_In.get(currentPlayer + 1).takeCard(tempCardOld);
-				playersList_In.get(currentPlayer).takeCard(tempCardNew);
+				Card tempCardNew = nextPlayer.giveCard();
+				Card tempCardOld = currentPlayer.giveCard();
+				nextPlayer.takeCard(tempCardOld);
+				currentPlayer.takeCard(tempCardNew);
 
-				if (playersList_In.get(currentPlayer).isHuman()
-				        || playersList_In.get(currentPlayer).isHuman()) {
-					TextDisplay.showText(">> Your new card: "
-					        + playersList_In.get(currentPlayer).getCard());
+				if (currentPlayer.isHuman()) {
+					TextDisplay.showText(">> Your new card: " + currentPlayer.getCard());
 
-				} else if (playersList_In.get(currentPlayer + 1).isHuman()) {
+				} else if (nextPlayer.isHuman()) {
 
-					TextDisplay.showText(">> Your new card: "
-					        + playersList_In.get(currentPlayer + 1).getCard());
+					TextDisplay.showText(">> Your new card: " + nextPlayer.getCard());
 				}
 
 			}
 		} else {
 
-			TextDisplay.showText(">> "
-			        + playersList_In.get(currentPlayer).getName()
-			        + " is trading in their card for a card off the deck.");
 			TextDisplay
-			        .showText(">> " + playersList_In.get(currentPlayer).getName()
-			                + " flips their card to show a "
-			                + playersList_In.get(currentPlayer).getCard());
+					.showText(">> " + currentPlayer.getName() + " is trading in their card for a card off the deck.");
+			TextDisplay.showText(
+					">> " + currentPlayer.getName() + " flips their card to show a " + currentPlayer.getCard());
 			TextDisplay.showText(">> Dealer takes top card off deck.");
 
-			playersList_In.get(currentPlayer).takeCard(deck.dealCard());
-			TextDisplay.showText(">> Top card is a  "
-			        + playersList_In.get(currentPlayer).getCard());
+			currentPlayer.takeCard(deck.dealCard());
+			TextDisplay.showText(">> Top card is a  " + currentPlayer.getCard());
 
 		}
 
@@ -301,8 +295,7 @@ public class Game implements Observer {
 	private void keepCard() {
 
 		try {
-			TextDisplay.showText(">> "
-			        + playersList_In.get(currentPlayer).getName() + ": I'm good!");
+			TextDisplay.showText(">> " + currentPlayer.getName() + ": I'm good!");
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
